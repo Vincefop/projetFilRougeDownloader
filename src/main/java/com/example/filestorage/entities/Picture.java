@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.File;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +21,13 @@ public class Picture {
     private long size;
 
     private int numberOfCFU;
+
+/*
+    private File pictureResult;
+    private String fileNameResult;
+    private String pictureDownloadUriResult;
+    private String fileTypeResult;
+    private long sizeResult;
+
+ */
 }

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
+@CrossOrigin
 public class PictureController {
 
     private static final Logger logger = LoggerFactory.getLogger(PictureController.class);
@@ -76,6 +77,34 @@ public class PictureController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+
+    @GetMapping("/downloadFileResult/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFileResult(@PathVariable String fileName, HttpServletRequest request) {
+        Resource resource = this.pictureService.loadPictureResultAsResource(fileName);
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            logger.info("Could not determine file type.");
+        }
+
+        // On dédinin le content type si il n'existe pas
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
+    @GetMapping("/downloadCFUResult/{fileName:.+}")
+    public int downloadCFUResult(@PathVariable String fileName, HttpServletRequest request) {
+
+        return this.pictureService.getCFUfromFilename(fileName);
     }
 
     @GetMapping("/files")
